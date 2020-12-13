@@ -1,10 +1,21 @@
 ---
 - hosts: all
+  vars:
+    airflow_home: /app/airflow
   tasks:
     - name: Create Airflow home
       file:
-        path: /app/airflow
+        path: '{{ airflow_home }}'
         state: directory
         owner: vagrant
         group: vagrant
       become: yes
+    - name: Install Python 3
+      yum:
+        name: python3
+        state: latest
+      become: yes
+    - name: Create Airflow Virtual Environment
+      command: python3 -m venv .airflow-venv
+      args:
+        chdir: '{{ airflow_home }}'
