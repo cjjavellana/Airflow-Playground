@@ -1,0 +1,10 @@
+---
+- hosts: all
+  tasks:
+    - name: Create Airflow home
+      file:
+        path: /app/airflow
+        state: directory
+        owner: vagrant
+        group: vagrant
+      become: yes
