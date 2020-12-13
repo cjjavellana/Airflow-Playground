@@ -2,6 +2,7 @@
 - hosts: all
   vars:
     airflow_home: /app/airflow
+    airflow_venv: '{{ airflow_home }}/.airflow-venv'
   tasks:
     - name: Create Airflow home
       file:
@@ -13,9 +14,23 @@
     - name: Install Python 3
       yum:
         name: python3
-        state: latest
+        state: present
+      become: yes
+    - name: Install Airflow Deps
+      yum:
+        name:
+          - gcc
+          - python3-devel
+        state: present
       become: yes
     - name: Create Airflow Virtual Environment
-      command: python3 -m venv .airflow-venv
+      command: python3 -m venv '{{ airflow_venv }}'
       args:
         chdir: '{{ airflow_home }}'
+    - name: Upgrade PIP
+      command: '{{ airflow_venv }}/bin/pip install --upgrade pip'
+    - name: Install Airflow Celery
+      pip:
+        virtualenv: '{{ airflow_venv }}'
+        name: 'apache-airflow[celery]'
+
