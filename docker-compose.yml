@@ -1,13 +1,5 @@
 version: "3.8"
 services:
-  db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
   ldap:
     image: osixia/openldap:1.2.3
     volumes:
@@ -23,17 +15,14 @@ services:
   web:
     build: .
     depends_on: 
-      - db
       - ldap
     ports:
       - 8080:8080
     command: > 
-      bash -c "airflow db upgrade
+      bash -c "airflow db init
       && airflow webserver"
   scheduler:
     build: .
-    depends_on: 
-      - db
     command: > 
-      bash -c "airflow db upgrade
+      bash -c "airflow db init
       && airflow scheduler"
