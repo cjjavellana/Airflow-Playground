@@ -1,0 +1,73 @@
+---
+- hosts: all
+
+  tasks:
+
+    - name: Upgrade OS
+      command: yum -y update
+      become: yes
+
+    - command: stat /etc/yum.repos.d/MariaDB.repo
+      register: mariadbrepo_exists
+      ignore_errors: True
+
+    - name: Create MariaDB yum repository
+      blockinfile:
+        path: /etc/yum.repos.d/MariaDB.repo
+        create: yes
+        block: |
+          [mariadb]
+          name = MariaDB
+          baseurl = http://yum.mariadb.org/10.4/centos7-amd64
+          gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+          gpgcheck=1
+      become: yes
+      when: mariadbrepo_exists is failed
+
+    - name: Install MariaDB
+      yum:
+        name:
+          - MariaDB-server
+          - MariaDB-client
+      become: yes
+
+    - command: grep -e "^explicit_defaults_for_timestamp = 1$" /etc/my.cnf
+      register: explicit_defaults_for_timestamp_enabled
+      ignore_errors: True
+
+    - name: Set explicit_defaults_for_timestamp
+      lineinfile:
+        path: /etc/my.cnf
+        line: explicit_defaults_for_timestamp = 1
+        insertafter: '^\[mysqld\]$'
+      become: yes
+      when: explicit_defaults_for_timestamp_enabled is failed
+
+    - name: Enable MariaDB service
+      command: systemctl enable --now mariadb.service
+      become: yes
+
+    - name: Start MariaDB Service
+      command: systemctl restart mariadb.service
+      become: yes
+
+    - name: Make sure pymysql is present
+      become: yes
+      pip:
+        name: pymysql
+        state: present
+
+    - name: Create database user for airflow
+      mysql_user:
+        login_user: root
+        name: airflow
+        password: airflow
+        priv: '*.*:ALL'
+        host: '%'
+        state: present
+
+    - name: Create a new database with name 'airflow'
+      mysql_db:
+        login_user: root
+        name: airflow
+        state: present

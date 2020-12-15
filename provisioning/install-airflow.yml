@@ -1,0 +1,42 @@
+---
+- hosts: all
+  vars:
+    airflow_home: /app/airflow
+    airflow_venv: '{{ airflow_home }}/.airflow-venv'
+  tasks:
+    - name: Create Airflow home
+      file:
+        path: '{{ airflow_home }}'
+        state: directory
+        owner: vagrant
+        group: vagrant
+      become: yes
+
+    - name: Install Python 3
+      yum:
+        name: python3
+        state: present
+      become: yes
+
+    - name: Install Airflow Deps
+      yum:
+        name:
+          - epel-release
+          - mysql-devel
+          - gcc
+          - python3-devel
+        state: present
+      become: yes
+    - name: Create Airflow Virtual Environment
+      command: python3 -m venv '{{ airflow_venv }}'
+      args:
+        chdir: '{{ airflow_home }}'
+    - name: Upgrade PIP
+      command: '{{ airflow_venv }}/bin/pip install --upgrade pip'
+    - name: Install Airflow Celery
+      pip:
+        virtualenv: '{{ airflow_venv }}'
+        name: 
+          - 'apache-airflow[celery]'
+          - redis
+          - mysqlclient==2.0.1

@@ -1,0 +1,21 @@
+---
+- hosts: all
+  tasks:
+    - name: Install Redis
+      yum:
+        name: redis
+        state: present
+      become: yes
+    - name: Expose Redis
+      replace:
+        path: /etc/redis.conf
+        regexp: '^bind 127.0.0.1$'
+        replace: 'bind 192.168.33.10'
+      become: yes
+    - name: Start Redis
+      command: systemctl restart redis.service
+      become: yes
+    - name: Start Redis on Boot
+      command: systemctl enable redis
+      become: yes
+
