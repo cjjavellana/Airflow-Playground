@@ -1,34 +1,93 @@
 
-
-dn: ou=users, dc=cjavellana,dc=me
-ou: users
-description: All users in the organisation
-objectclass: organizationalUnit
-objectClass: extensibleObject
+dn: olcOverlay=memberof,olcDatabase={1}mdb,cn=config
+changetype: add
+objectClass: olcMemberOf
+objectClass: olcOverlayConfig
+objectClass: olcConfig
 objectClass: top
+olcOverlay: memberof
+olcMemberOfRefInt: TRUE
+olcMemberOfDangling: ignore
+olcMemberOfGroupOC: groupOfNames
+olcMemberOfMemberAD: member
+olcMemberOfMemberOfAD: memberOf
+
+dn: cn=module{0},cn=config
+changetype: modify
+add: olcModuleLoad
+olcModuleLoad: refint.la
 
 # Groups root
 
-dn: ou=groups, dc=cjavellana,dc=me
-ou: groups
+dn: ou=Group,dc=cjavellana,dc=me
+changetype: add
+ou: Group
 description: All groups in the organisation
 objectclass: organizationalUnit
-objectClass: extensibleObject
-objectClass: top
+
+dn: ou=People,dc=cjavellana,dc=me
+changetype: add
+ou: People
+description: All groups in the organisation
+objectclass: organizationalUnit
 
 # Actual users
 
-dn: cn=Flowable, ou=users,dc=cjavellana,dc=me
-objectclass: inetOrgPerson
-cn: Administrator
-sn: Administrator
-uid: administrator
-userPassword:: dGVzdA==
+dn: uid=billy,ou=People,dc=cjavellana,dc=me
+changetype: add
+uid: billy
+cn: billy
+sn: 3
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+loginShell: /bin/bash
+homeDirectory: /home/billy
+uidNumber: 14583102
+gidNumber: 14564100
+userPassword: secret
+mail: billy@example.org
+gecos: Billy User
 
-dn: cn=Christian, ou=users,dc=cjavellana,dc=me
-objectclass: inetOrgPerson
-cn: Christian
-sn: Administrator
+dn: uid=christian,ou=People,dc=cjavellana,dc=me
+changetype: add
 uid: christian
-userPassword:: dGVzdA==
+cn: christian
+sn: 4
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+loginShell: /bin/bash
+homeDirectory: /home/billy
+uidNumber: 14583103
+gidNumber: 14564101
+userPassword: secret
+mail: christian@example.org
+gecos: Christian User
 
+dn: uid=admin,ou=People,dc=cjavellana,dc=me
+changetype: add
+uid: admin
+cn: admin
+sn: 5
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+loginShell: /bin/bash
+homeDirectory: /home/billy
+uidNumber: 14583104
+gidNumber: 14564102
+userPassword: secret
+mail: admin@example.org
+gecos: Admin User
+
+dn: cn=AdminGroup,ou=Group,dc=cjavellana,dc=me
+changetype: add
+cn: AdminGroup
+description: All groups in the organisation
+objectClass: groupOfNames
+member: uid=admin,ou=People,dc=cjavellana,dc=me
+member: uid=billy,ou=People,dc=cjavellana,dc=me
