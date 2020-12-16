@@ -20,4 +20,10 @@ Starting the WebServer and Scheduler
 ```bash
 $ docker-compose up -d web scheduler
 ```
+## FAQ
 
+1. Want to cleanup exited containers and dangling images?
+
+```bash
+$ ./cleanup.sh
+```
