@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   ldap:
-    image: osixia/openldap:1.2.3
+    image: osixia/openldap:latest
     volumes:
       - ./ldap.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-bootstrap.ldif
     environment:
