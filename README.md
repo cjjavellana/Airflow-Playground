@@ -24,6 +24,23 @@ $ docker-compose up -d web scheduler
 
 1. Want to cleanup exited containers and dangling images?
 
-```bash
-$ ./cleanup.sh
-```
+		```bash
+		$ ./cleanup.sh
+		```
+
+2. Search LDAP
+
+		Ensure ldap container is up
+		```bash
+		$ docker-compose up -d ldap
+		```
+
+		Get Bash in Ldap container
+		```bash
+		$ docker-compose exec ldap /bin/bash
+		```
+
+		Search LDAP
+		```bash
+		(in container) $ ldapsearch -x -b dc=cjavellana,dc=me -h localhost -D "cn=admin,dc=cjavellana,dc=me" -w secret
+		```
