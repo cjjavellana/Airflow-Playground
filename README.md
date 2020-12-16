@@ -40,7 +40,9 @@ Get Bash in Ldap container
 $ docker-compose exec ldap /bin/bash
 ```
 
-Search LDAP
 ```bash
+# Search
 (in container) $ ldapsearch -x -b dc=cjavellana,dc=me -h localhost -D "cn=admin,dc=cjavellana,dc=me" -w secret
+# Showing user's group membership
+(in container) $ ldapsearch -x -b dc=cjavellana,dc=me -h localhost -D "cn=admin,dc=cjavellana,dc=me" -w secret memberof
 ```
