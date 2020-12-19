@@ -2,7 +2,8 @@
 A playground for playing around with various Airflow deployment architectures.
 
 ## Architecture
-TODO
+
+![Architecture](/docs/architecture.png?raw=true "Architecture")
 
 ## Prerequisites
 
