@@ -21,6 +21,15 @@ Starting the WebServer and Scheduler
 ```bash
 $ docker-compose up -d web scheduler
 ```
+
+Logging in as Admin
+```
+1. Open your browser and navigate to http://localhost:8080
+2. Enter credentials
+		username: admin
+		password: secret
+```
+
 ## FAQ
 
 1. Want to cleanup exited containers and dangling images?
