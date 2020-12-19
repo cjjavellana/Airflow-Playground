@@ -47,3 +47,9 @@ $ docker-compose exec ldap /bin/bash
 # Showing user's group membership
 (in container) $ ldapsearch -x -b dc=cjavellana,dc=me -h localhost -D "cn=admin,dc=cjavellana,dc=me" -w secret memberof
 ```
+
+3. Stopping Airflow Services
+```
+$ docker-compose stop web scheduler ldap
+$ vagrant halt
+```
